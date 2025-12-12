@@ -23,7 +23,7 @@ interface ProgressIndicatorProps {
 }
 
 const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({ currentStep, finalStepIndex }) => (
-  <div className="flex justify-between items-center mb-6">
+  <div className="flex items-center justify-between mb-6">
     <div className="text-sm font-medium text-teal-600">
       Question {Math.min(currentStep + 1, finalStepIndex)} of {finalStepIndex}
     </div>
@@ -71,7 +71,7 @@ export default function Home() {
       // Prefixing the title with the brand name
       const finalEpisode: PodcastEpisode | null = episode
         ? {
-            title: `BCG WomEmpowerment Podcast: ${episode.title}`,
+            title: `BCG Women Powerment Podcast: ${episode.title}`,
             description: episode.description,
             url: episode.url,
           }
@@ -129,11 +129,11 @@ export default function Home() {
   if (currentStep === -1) {
     // --- Initial Introduction Screen (Celebratory Invite) ---
     content = (
-      <div className="text-center p-8 animate-fade-in">
-        <h2 className="text-4xl font-extrabold text-teal-800 mb-4">
-            BCG WomEmpowerment Podcast
+      <div className="p-8 text-center animate-fade-in">
+        <h2 className="mb-4 text-2xl font-extrabold leading-tight text-teal-800 sm:text-3xl md:text-4xl">
+            BCG Women Powerment Podcast
         </h2>
-        <p className="text-lg text-gray-600 mb-8 font-medium border-b pb-4 border-teal-100">
+        <p className="pb-4 mb-8 text-lg font-medium text-gray-600 border-b border-teal-100">
           Thank you for making our first year a tremendous success! To celebrate, answer three quick questions to find your perfect end-of-year episode recommendation.
         </p>
         <button
@@ -149,7 +149,7 @@ export default function Home() {
     content = (
       // The 'key' prop forces React to re-render and re-apply the animation on step change
       <div key={currentStep} className="animate-fade-in">
-        <header className="text-center mb-6 pb-4 border-b border-teal-100">
+        <header className="pb-4 mb-6 text-center border-b border-teal-100">
           <h1 className="text-3xl font-extrabold text-teal-800">
             Podcast Episode Finder
           </h1>
@@ -160,25 +160,25 @@ export default function Home() {
             currentStep={currentStep} 
             finalStepIndex={FINAL_STEP_INDEX} 
           />
-          <div className="p-6 bg-teal-50 rounded-lg border-2 border-teal-200">
-            <h2 className="text-xl font-bold mb-5 text-gray-800">
+          <div className="p-6 border-2 border-teal-200 rounded-lg bg-teal-50">
+            <h2 className="mb-5 text-xl font-bold text-gray-800">
               {currentStep + 1}. {currentQuestion!.text}
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {/* Option A Button */}
               <button
                 onClick={() => handleAnswer(currentQuestion!.id, 'a')}
-                className="w-full py-3 px-4 bg-white text-teal-600 font-semibold border border-teal-300 rounded-lg shadow-sm hover:bg-teal-50 hover:border-teal-400 transition-all duration-200 ease-in-out text-left"
+                className="w-full px-4 py-3 font-semibold text-left text-teal-600 transition-all duration-200 ease-in-out bg-white border border-teal-300 rounded-lg shadow-sm hover:bg-teal-50 hover:border-teal-400"
               >
-                <span className="font-bold mr-2 text-teal-700">A:</span> {currentQuestion!.optionA}
+                <span className="mr-2 font-bold text-teal-700">A:</span> {currentQuestion!.optionA}
               </button>
 
               {/* Option B Button */}
               <button
                 onClick={() => handleAnswer(currentQuestion!.id, 'b')}
-                className="w-full py-3 px-4 bg-white text-teal-600 font-semibold border border-teal-300 rounded-lg shadow-sm hover:bg-teal-50 hover:border-teal-400 transition-all duration-200 ease-in-out text-left"
+                className="w-full px-4 py-3 font-semibold text-left text-teal-600 transition-all duration-200 ease-in-out bg-white border border-teal-300 rounded-lg shadow-sm hover:bg-teal-50 hover:border-teal-400"
               >
-                <span className="font-bold mr-2 text-teal-700">B:</span> {currentQuestion!.optionB}
+                <span className="mr-2 font-bold text-teal-700">B:</span> {currentQuestion!.optionB}
               </button>
             </div>
           </div>
@@ -189,19 +189,19 @@ export default function Home() {
     // --- Result Screen (Styled like a question card) ---
     content = (
       <div key="result" className="animate-fade-in">
-        <header className="text-center mb-6 pb-4 border-b border-teal-100">
+        <header className="pb-4 mb-6 text-center border-b border-teal-100">
           <h1 className="text-3xl font-extrabold text-teal-800">
             Your Recommendation
           </h1>
         </header>
-        <div className="text-center p-6 bg-teal-50 border-4 border-teal-300 rounded-xl">
-          <h2 className="text-3xl font-extrabold text-green-700 mb-4">
+        <div className="p-6 text-center border-4 border-teal-300 bg-teal-50 rounded-xl">
+          <h2 className="mb-4 text-3xl font-extrabold text-green-700">
             Episode Match Found!
           </h2>
-          <h3 className="text-2xl font-bold text-gray-900 mb-2">
+          <h3 className="mb-2 text-2xl font-bold text-gray-900">
             {result.title}
           </h3>
-          <p className="text-gray-600 mb-6 italic border-t pt-3 mt-3">
+          <p className="pt-3 mt-3 mb-6 italic text-gray-600 border-t">
             {result.description}
           </p>
           <a
@@ -214,7 +214,7 @@ export default function Home() {
           </a>
           <button
             onClick={resetQuiz}
-            className="mt-4 block w-full text-sm text-teal-600 hover:text-teal-800 transition duration-300"
+            className="block w-full mt-4 text-sm text-teal-600 transition duration-300 hover:text-teal-800"
           >
             Start Over
           </button>
@@ -224,8 +224,8 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
-      <div className="w-full max-w-3xl bg-white shadow-2xl rounded-xl p-8 transform transition-all duration-500 ease-in-out">
+    <div className="flex items-center justify-center min-h-screen p-4 bg-gray-50">
+      <div className="w-full max-w-3xl p-8 transition-all duration-500 ease-in-out transform bg-white shadow-2xl rounded-xl">
         {content}
       </div>
     </div>

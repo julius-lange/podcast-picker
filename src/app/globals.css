@@ -1,16 +1,23 @@
+/* globals.css */
+
+/* Reverting to stable Tailwind CSS v3/v3.x directives */
+/* FIX: In Tailwind CSS v4, these are replaced by a single @tailwind directive. */
+/* @tailwind base; */
+/* @tailwind components; */
+/* @tailwind utilities; */
+
 @import "tailwindcss";
 
+
+/* Theme Variables */
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* @theme block: Used to configure Tailwind CSS variables */
+/* Commented out: @theme is not a valid CSS at-rule in standard CSS */
+/* :root variables above already provide theme configuration */
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -23,4 +30,22 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Custom Utilities and Animations */
+@layer utilities {
+  .animate-fade-in {
+    animation: fade-in 0.4s ease-out;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

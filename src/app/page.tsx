@@ -1,42 +1,46 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-// Assuming these files exist in your project structure:
-import { QUESTIONS, PODCAST_MAP } from '@/data'; 
-import { QuestionId, Answer, UserAnswers, PodcastEpisode } from '@/types'; 
-import React from 'react'; // Import React for React.FC
+import React from 'react';
+
+import { QUIZ_BY_VERSION } from '@/quizConfig';
+import { resolveQuestionContent } from '@/resolveQuestion';
+import { PODCAST_MAP } from '@/data';
+import { QuestionId, Answer, UserAnswers, PodcastEpisode } from '@/types';
+import { usePreviewDate } from '@/usePreviewDate';
 
 // --- Constants ---
-const NEXT_QUESTION_INDEX = 0;
-const FINAL_STEP_INDEX = QUESTIONS.length; // Assumes 3 questions, so index 3
+const FINAL_STEP_INDEX = 3;
 
-// Standard style for all primary action buttons (Start Quiz, Listen Now)
 const PRIMARY_BUTTON_STYLE =
-  "inline-block w-full py-3 px-4 bg-white text-green-700 font-bold border border-green-500 rounded-lg shadow-md hover:bg-green-50 hover:border-green-600 transition-all duration-300 ease-in-out text-xl";
+  'inline-block w-full py-3 px-4 bg-white text-green-700 font-bold border border-green-500 rounded-lg shadow-md hover:bg-green-50 hover:border-green-600 transition-all duration-300 ease-in-out text-xl';
 
 // ===============================================
-// ProgressIndicator component (Required for Home to compile)
+// ProgressIndicator (styling unchanged)
 // ===============================================
 interface ProgressIndicatorProps {
   currentStep: number;
   finalStepIndex: number;
 }
 
-const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({ currentStep, finalStepIndex }) => (
+const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
+  currentStep,
+  finalStepIndex,
+}) => (
   <div className="flex items-center justify-between mb-6">
     <div className="text-sm font-medium text-teal-600">
       Question {Math.min(currentStep + 1, finalStepIndex)} of {finalStepIndex}
     </div>
     <div className="flex space-x-2">
-      {QUESTIONS.map((_, index) => (
+      {Array.from({ length: finalStepIndex }).map((_, index) => (
         <div
           key={index}
           className={`w-3 h-3 rounded-full transition-colors duration-300 ${
             index < currentStep
-              ? 'bg-green-500' // Answered
+              ? 'bg-green-500'
               : index === currentStep
-              ? 'bg-teal-600 ring-2 ring-teal-300' // Current
-              : 'bg-gray-200' // Unanswered
+              ? 'bg-teal-600 ring-2 ring-teal-300'
+              : 'bg-gray-200'
           }`}
         />
       ))}
@@ -44,110 +48,111 @@ const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({ currentStep, fina
   </div>
 );
 
-
 // ===============================================
-// Home Component
+// Home
 // ===============================================
 export default function Home() {
-  // -1: Intro Screen, 0..2: Questions, 3: Result Screen
+  const { date, setDate, version } = usePreviewDate();
+  const quiz = QUIZ_BY_VERSION[version];
+
+  // -1: Intro, 0..2: Questions, 3: Result
   const [currentStep, setCurrentStep] = useState<number>(-1);
-  const [answers, setAnswers] = useState<UserAnswers>({ q1: null, q2: null, q3: null });
+  const [currentQuestionId, setCurrentQuestionId] = useState<QuestionId | null>(
+    null
+  );
+  const [answers, setAnswers] = useState<UserAnswers>({});
   const [result, setResult] = useState<PodcastEpisode | null>(null);
 
-  const currentQuestion = currentStep >= 0 && currentStep < FINAL_STEP_INDEX ? QUESTIONS[currentStep] : null;
+  const startQuiz = () => {
+    setAnswers({});
+    setResult(null);
+    setCurrentQuestionId('q1');
+    setCurrentStep(0);
+  };
 
-  // ===============================================
-  // FIX: Refactored handleAnswer to ensure the final result calculation 
-  // uses the non-stale, complete set of answers.
-  // ===============================================
-  const handleAnswer = useCallback((questionId: QuestionId, answer: Answer) => {
+  const resetQuiz = () => {
+    setCurrentStep(-1);
+    setCurrentQuestionId(null);
+    setAnswers({});
+    setResult(null);
+  };
 
-    // 1. Utility function to calculate the result
-    const calculateResult = (finalAnswers: Record<QuestionId, Answer>) => {
-      // Create the deterministic key, e.g., 'a-b-a'
-      const key = `${finalAnswers.q1}-${finalAnswers.q2}-${finalAnswers.q3}`;
-      const episode = PODCAST_MAP[key];
+  const calculateResult = (finalAnswers: UserAnswers) => {
+    const key = `${version}:${finalAnswers.q1}-${finalAnswers.q2}-${finalAnswers.q3}`;
+    const episode = PODCAST_MAP[key];
 
-      // Prefixing the title with the brand name
-      const finalEpisode: PodcastEpisode | null = episode
+    setResult(
+      episode
         ? {
             title: `BCG Women Powerment Podcast: ${episode.title}`,
             description: episode.description,
             url: episode.url,
           }
-        : null;
+        : {
+            title: 'Error: Mapping Issue',
+            description:
+              'The answers did not match a predefined podcast episode.',
+            url: '#',
+          }
+    );
+  };
 
-      if (finalEpisode) {
-        setResult(finalEpisode);
-      } else {
-        setResult({
-          title: 'Error: Mapping Issue',
-          description: 'The answers did not match a predefined podcast episode. Please contact support.',
-          url: '#',
-        });
-      }
-    };
-
-    // Calculate the *new, complete* state of answers based on the current state and new answer
+  const handleAnswer = (questionId: QuestionId, answer: Answer) => {
     const newAnswers: UserAnswers = {
-        ...answers,
-        [questionId]: answer,
+      ...answers,
+      [questionId]: answer,
     };
-    
-    // 3. Move to the next step
-    const nextStep = currentStep + 1;
 
-    if (nextStep < FINAL_STEP_INDEX) {
-      // Still more questions to go
-      setAnswers(newAnswers); // Update state with the new answer
-      setCurrentStep(nextStep);
+    const next = quiz[questionId].next({
+      answer,
+      answers: newAnswers,
+      version,
+    });
+
+    setAnswers(newAnswers);
+
+    if (next === 'result') {
+      calculateResult(newAnswers);
+      setCurrentStep(FINAL_STEP_INDEX);
+      setCurrentQuestionId(null);
     } else {
-      // All questions answered, time to calculate result
-      // We use the locally created `newAnswers` to ensure we have the Q3 answer included.
-      calculateResult(newAnswers as Record<QuestionId, Answer>); 
-      setAnswers(newAnswers); // Final state update for completeness
-      setCurrentStep(FINAL_STEP_INDEX); // Move to the "Result" step
+      setCurrentQuestionId(next);
+      setCurrentStep((s) => s + 1);
     }
-    
-    // Dependency array is necessary to pick up the latest 'currentStep' and 'answers'
-  }, [currentStep, answers]);
-
-
-  const startQuiz = () => {
-    setCurrentStep(NEXT_QUESTION_INDEX);
   };
 
-  const resetQuiz = () => {
-    setCurrentStep(-1); // Go back to the intro
-    setAnswers({ q1: null, q2: null, q3: null });
-    setResult(null);
-  };
 
-  // Determine content based on current step
+  // ===============================================
+  // Content resolution
+  // ===============================================
   let content;
 
   if (currentStep === -1) {
-    // --- Initial Introduction Screen (Celebratory Invite) ---
     content = (
       <div className="p-8 text-center animate-fade-in">
         <h2 className="mb-4 text-2xl font-extrabold leading-tight text-teal-800 sm:text-3xl md:text-4xl">
-            BCG Women Powerment Podcast
+          BCG Women Powerment Podcast
         </h2>
         <p className="pb-4 mb-8 text-lg font-medium text-gray-600 border-b border-teal-100">
-          Thank you for making our first year a tremendous success! To celebrate, answer three quick questions to find your perfect end-of-year episode recommendation.
+          Thank you for making our first year a tremendous success! To celebrate,
+          answer three quick questions to find your perfect episode recommendation.
         </p>
-        <button
-          onClick={startQuiz}
-          className={PRIMARY_BUTTON_STYLE}
-        >
+        <button onClick={startQuiz} className={PRIMARY_BUTTON_STYLE}>
           Start the Quiz
         </button>
       </div>
     );
-  } else if (currentStep < FINAL_STEP_INDEX) {
-    // --- Question Screen ---
+  } else if (currentStep < FINAL_STEP_INDEX && currentQuestionId) {
+    const resolved =
+      currentQuestionId === 'q1'
+        ? {
+            text: quiz.q1.text,
+            a: quiz.q1.options.a,
+            b: quiz.q1.options.b,
+          }
+        : resolveQuestionContent(version, currentQuestionId, answers);
+
     content = (
-      // The 'key' prop forces React to re-render and re-apply the animation on step change
       <div key={currentStep} className="animate-fade-in">
         <header className="pb-4 mb-6 text-center border-b border-teal-100">
           <h1 className="text-3xl font-extrabold text-teal-800">
@@ -155,38 +160,41 @@ export default function Home() {
           </h1>
         </header>
 
-        <div>
-          <ProgressIndicator 
-            currentStep={currentStep} 
-            finalStepIndex={FINAL_STEP_INDEX} 
-          />
-          <div className="p-6 border-2 border-teal-200 rounded-lg bg-teal-50">
-            <h2 className="mb-5 text-xl font-bold text-gray-800">
-              {currentStep + 1}. {currentQuestion!.text}
-            </h2>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              {/* Option A Button */}
-              <button
-                onClick={() => handleAnswer(currentQuestion!.id, 'a')}
-                className="w-full px-4 py-3 font-semibold text-left text-teal-600 transition-all duration-200 ease-in-out bg-white border border-teal-300 rounded-lg shadow-sm hover:bg-teal-50 hover:border-teal-400"
-              >
-                <span className="mr-2 font-bold text-teal-700">A:</span> {currentQuestion!.optionA}
-              </button>
+        <ProgressIndicator
+          currentStep={currentStep}
+          finalStepIndex={FINAL_STEP_INDEX}
+        />
 
-              {/* Option B Button */}
-              <button
-                onClick={() => handleAnswer(currentQuestion!.id, 'b')}
-                className="w-full px-4 py-3 font-semibold text-left text-teal-600 transition-all duration-200 ease-in-out bg-white border border-teal-300 rounded-lg shadow-sm hover:bg-teal-50 hover:border-teal-400"
-              >
-                <span className="mr-2 font-bold text-teal-700">B:</span> {currentQuestion!.optionB}
-              </button>
-            </div>
+        <div className="p-6 border-2 border-teal-200 rounded-lg bg-teal-50">
+          <h2 className="mb-5 text-xl font-bold text-gray-800">
+            {currentStep + 1}. {resolved.text}
+          </h2>
+
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <button
+              onClick={() =>
+                handleAnswer(currentQuestionId, 'a')
+              }
+              className="w-full px-4 py-3 font-semibold text-left text-teal-600 transition-all duration-200 ease-in-out bg-white border border-teal-300 rounded-lg shadow-sm hover:bg-teal-50 hover:border-teal-400"
+            >
+              <span className="mr-2 font-bold text-teal-700">A:</span>{' '}
+              {resolved.a}
+            </button>
+
+            <button
+              onClick={() =>
+                handleAnswer(currentQuestionId, 'b')
+              }
+              className="w-full px-4 py-3 font-semibold text-left text-teal-600 transition-all duration-200 ease-in-out bg-white border border-teal-300 rounded-lg shadow-sm hover:bg-teal-50 hover:border-teal-400"
+            >
+              <span className="mr-2 font-bold text-teal-700">B:</span>{' '}
+              {resolved.b}
+            </button>
           </div>
         </div>
       </div>
     );
   } else if (currentStep === FINAL_STEP_INDEX && result) {
-    // --- Result Screen (Styled like a question card) ---
     content = (
       <div key="result" className="animate-fade-in">
         <header className="pb-4 mb-6 text-center border-b border-teal-100">
@@ -194,6 +202,7 @@ export default function Home() {
             Your Recommendation
           </h1>
         </header>
+
         <div className="p-6 text-center border-4 border-teal-300 bg-teal-50 rounded-xl">
           <h2 className="mb-4 text-3xl font-extrabold text-green-700">
             Episode Match Found!
@@ -224,9 +233,22 @@ export default function Home() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4 bg-gray-50">
-      <div className="w-full max-w-3xl p-8 transition-all duration-500 ease-in-out transform bg-white shadow-2xl rounded-xl">
-        {content}
+    <div className="min-h-screen p-4 bg-gray-50">
+      <div className="max-w-5xl mx-auto mb-4 text-sm text-gray-600">
+        <label className="block mb-1 font-medium">Preview date</label>
+        <input
+          type="date"
+          value={date.toISOString().slice(0, 10)}
+          onChange={(e) => setDate(new Date(e.target.value))}
+          className="px-2 py-1 border rounded"
+        />
+        <div className="mt-1">Active version: {version}</div>
+      </div>
+
+      <div className="flex items-center justify-center">
+        <div className="w-full max-w-3xl p-8 transition-all duration-500 ease-in-out bg-white shadow-2xl rounded-xl">
+          {content}
+        </div>
       </div>
     </div>
   );

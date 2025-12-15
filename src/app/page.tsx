@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import React from 'react';
 
 import { QUIZ_BY_VERSION } from '@/quizConfig';
 import { resolveQuestionContent } from '@/resolveQuestion';
-import { PODCAST_MAP } from '@/data';
+import { PODCAST_MAP } from '@/PODCAST_MAP';
 import { QuestionId, Answer, UserAnswers, PodcastEpisode } from '@/types';
 import { usePreviewDate } from '@/usePreviewDate';
 
@@ -76,9 +76,18 @@ export default function Home() {
     setAnswers({});
     setResult(null);
   };
-
   const calculateResult = (finalAnswers: UserAnswers) => {
     const key = `${version}:${finalAnswers.q1}-${finalAnswers.q2}-${finalAnswers.q3}`;
+
+    const keys = Object.keys(PODCAST_MAP);
+    const hasKey = Object.prototype.hasOwnProperty.call(PODCAST_MAP, key);
+
+    console.log('[quiz] version:', version);
+    console.log('[quiz] answers:', finalAnswers);
+    console.log('[quiz] key:', key);
+    console.log('[quiz] hasKey:', hasKey);
+    console.log('[quiz] sample keys:', keys.slice(0, 10));
+
     const episode = PODCAST_MAP[key];
 
     setResult(
@@ -90,12 +99,31 @@ export default function Home() {
           }
         : {
             title: 'Error: Mapping Issue',
-            description:
-              'The answers did not match a predefined podcast episode.',
+            description: `Missing key: ${key}`,
             url: '#',
           }
     );
   };
+
+  // const calculateResult = (finalAnswers: UserAnswers) => {
+  //   const key = `${version}:${finalAnswers.q1}-${finalAnswers.q2}-${finalAnswers.q3}`;
+  //   const episode = PODCAST_MAP[key];
+
+  //   setResult(
+  //     episode
+  //       ? {
+  //           title: `BCG Women Powerment Podcast: ${episode.title}`,
+  //           description: episode.description,
+  //           url: episode.url,
+  //         }
+  //       : {
+  //           title: 'Error: Mapping Issue',
+  //           description:
+  //             'The answers did not match a predefined podcast episode.',
+  //           url: '#',
+  //         }
+  //   );
+  // };
 
   const handleAnswer = (questionId: QuestionId, answer: Answer) => {
     const newAnswers: UserAnswers = {

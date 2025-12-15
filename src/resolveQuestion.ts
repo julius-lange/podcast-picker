@@ -29,30 +29,30 @@ export function resolveQuestionContent(
         return {
           text:
             'Möchtest du von einer Frau hören, die die Spitze erreicht hat oder lieber von einer, die noch auf dem Weg nach oben ist?',
-          a: 'Spitze erreicht: Beate Heinisch',
-          b: 'Noch auf dem Weg nach oben: Christine Hauck',
+          a: 'Spitze erreicht',
+          b: 'Noch auf dem Weg nach oben',
         };
 
       if (answers.q1 === 'a' && answers.q2 === 'b')
         return {
           text: 'Welche Art von Wechsel interessiert dich am meisten?',
-          a: 'Ein radikaler Branchenwechsel: Christina Foerster',
-          b: 'Ein völliger Rollenwechsel: Alice Sachova',
+          a: 'Ein radikaler Branchenwechsel',
+          b: 'Ein völliger Rollenwechsel',
         };
 
       if (answers.q1 === 'b' && answers.q2 === 'a')
         return {
           text:
             'Möchtest du mehr von einer Gründung im Social Business oder im Bereich Sustainability hören?',
-          a: 'Social Business: Iris Braun',
-          b: 'Sustainability: Mareike Jens',
+          a: 'Social Business',
+          b: 'Sustainability',
         };
 
       return {
         text:
           'Möchtest du lieber von einer Success Story lernen oder von einer Geschichte mit überwundenen Herausforderungen?',
-        a: 'Success Story: Katja Bossert',
-        b: 'Überwundene Herausforderungen: Bea Beste',
+        a: 'Success Story',
+        b: 'Überwundene Herausforderungen',
       };
     }
   }
@@ -68,7 +68,7 @@ export function resolveQuestionContent(
           }
         : {
             text:
-              'Interessiert dich mehr eine Frau, die in Nordamerika gearbeitet hat oder lieber eine, die ihre Karriere in einer „exotischeren“ Region gemacht hat',
+              'Interessiert dich mehr eine Frau, die in Nordamerika gearbeitet hat oder lieber eine, die ihre Karriere in einer „exotischeren“ Region gemacht hat?',
             a: 'Nordamerika',
             b: '„Exotischere“ Region',
           };
@@ -79,31 +79,31 @@ export function resolveQuestionContent(
         return {
           text:
             'Interessierst du dich mehr für die Erfahrungen einer Frau, die Vollzeit arbeitet oder möchtest du von Erfahrungen mit Teilzeit-Karrieren hören?',
-          a: 'Vollzeit: Verena Grundke',
-          b: 'Teilzeit: Anja Klodwig',
+          a: 'Vollzeit',
+          b: 'Teilzeit',
         };
 
       if (answers.q1 === 'a' && answers.q2 === 'b')
         return {
           text:
             'Möchtest du gerne mehr von einer Konzernkarriere oder von einer Portfolio-Karriere hören?',
-          a: 'Konzernkarriere: Ines Ploss',
-          b: 'Portfoliokarriere: Astrid Rauchfuss',
+          a: 'Konzernkarriere',
+          b: 'Portfoliokarriere',
         };
 
       if (answers.q1 === 'b' && answers.q2 === 'a')
         return {
           text:
             'Möchtest du eher von einer Frau hören, die in einem Unternehmen Karriere gemacht hat oder einer, die mehrfach gewechselt hat?',
-          a: 'Ein Unternehmen: Steffi Walther',
-          b: 'Mehrere Unternehmen: Tina Doerffer',
+          a: 'Ein Unternehmen',
+          b: 'Mehrere Unternehmen',
         };
 
       return {
         text:
           'Möchtest du lieber von einer Erfahrung in Asien oder in Südamerika hören?',
-        a: 'Asien: Saskia Bruysten',
-        b: 'Südamerika: Julia Santander',
+        a: 'Asien',
+        b: 'Südamerika',
       };
     }
   }
@@ -130,31 +130,31 @@ export function resolveQuestionContent(
         return {
           text:
             'Interessierst du dich mehr für die Erfahrungen einer Frau, die eine der Top-Expertinnen für Cyber-Security ist oder einer, die ein Branding-Profi ist?',
-          a: 'Cyber-Security: Maya Bundt',
-          b: 'Branding: Wiebke Sokolowski',
+          a: 'Cyber-Security',
+          b: 'Branding',
         };
 
       if (answers.q1 === 'a' && answers.q2 === 'b')
         return {
           text:
             'Möchtest du gerne mehr von einer funktionalen Spezialisierung im Bereich Finanzen oder Operations hören?',
-          a: 'Finanzen: Alexandra Heine',
-          b: 'Operations: Martina Schulze-Adams',
+          a: 'Finanzen',
+          b: 'Operations',
         };
 
       if (answers.q1 === 'b' && answers.q2 === 'a')
         return {
           text:
             'Möchtest du eher von einer Professorin für Projektmanagement oder für Marketing hören?',
-          a: 'Projektmanagement: Sabine Jaritz',
-          b: 'Marketing: Birte Kemmerling',
+          a: 'Projektmanagement',
+          b: 'Marketing',
         };
 
       return {
         text:
           'Möchtest du lieber von den Erfahrungen im Mittelstand oder dem Aufbau des Marketings in Ägypten hören?',
-        a: 'Mittelstand: Ulrike Garanin',
-        b: 'Ägypten: Sarah Oden',
+        a: 'Mittelstand',
+        b: 'Ägypten',
       };
     }
   }
@@ -181,31 +181,31 @@ export function resolveQuestionContent(
         return {
           text:
             'Das Feld der Selbstständigkeit ist unendlich weit. Möchtest du heute lieber von einem Social Business oder einer Tätigkeit im Venture Capital hören?',
-          a: 'Social Business: Juliane Kronen',
-          b: 'Venture Capital: Caro Gabor',
+          a: 'Social Business',
+          b: 'Venture Capital',
         };
 
       if (answers.q1 === 'a' && answers.q2 === 'b')
         return {
           text:
-            'Teilnehmerinnen unseres AR-Circles wissen, dass Boards vollkommen unterschiedlich sein können. Magst du eher von einer Aufsichtsrätin eines börsennotierten Unternehmens hören oder einer Beirätin in einem Familienunternehmen?',
-          a: 'Börsennotiert: Melanie Bockemühl',
-          b: 'Familienunternehmen: Christiane Uhl',
+            'Magst du eher von einer Aufsichtsrätin eines börsennotierten Unternehmens hören oder einer Beirätin in einem Familienunternehmen?',
+          a: 'Börsennotiert',
+          b: 'Familienunternehmen',
         };
 
       if (answers.q1 === 'b' && answers.q2 === 'a')
         return {
           text:
             'Möchtest du eher von einer Frau hören, die immer noch im gleichen Unternehmen seit ihrer Zeit bei BCG ist, oder von einer, die nach der Konzernkarriere nochmal etwas anderes macht?',
-          a: 'Gleiches Unternehmen: Isabella Erb-Herrmann',
-          b: 'Etwas anderes: Elisabeth Schick',
+          a: 'Gleiches Unternehmen',
+          b: 'Etwas anderes',
         };
 
       return {
         text:
-          'Gerade junge Ex-BCGlerinnen sind in unglaublich spannenden Start-ups unterwegs. Möchtest du lieber von faszinierenden Erfahrungen aus dem For profit oder aus dem NGO-Bereich hören?',
-        a: 'Mittelstand: Steff Gerhart',
-        b: 'NGO: Steff Rocker',
+          'Möchtest du lieber von faszinierenden Erfahrungen aus dem For profit oder aus dem NGO-Bereich hören?',
+        a: 'For profit',
+        b: 'NGO',
       };
     }
   }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import React from 'react';
 
 import { QUIZ_BY_VERSION } from '@/quizConfig';
@@ -62,6 +62,14 @@ export default function Home() {
   );
   const [answers, setAnswers] = useState<UserAnswers>({});
   const [result, setResult] = useState<PodcastEpisode | null>(null);
+
+  // Set current date and log it with version
+  useEffect(() => {
+    const currentDate = new Date();
+    setDate(currentDate);
+    console.log('Current date:', currentDate.toISOString().slice(0, 10));
+    console.log('Active version:', version);
+  }, [version, setDate]);
 
   const startQuiz = () => {
     setAnswers({});
@@ -262,17 +270,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen p-4 bg-gray-50">
-      <div className="max-w-5xl mx-auto mb-4 text-sm text-gray-600">
-        <label className="block mb-1 font-medium">Preview date</label>
-        <input
-          type="date"
-          value={date.toISOString().slice(0, 10)}
-          onChange={(e) => setDate(new Date(e.target.value))}
-          className="px-2 py-1 border rounded"
-        />
-        <div className="mt-1">Active version: {version}</div>
-      </div>
-
       <div className="flex items-center justify-center">
         <div className="w-full max-w-3xl p-8 transition-all duration-500 ease-in-out bg-white shadow-2xl rounded-xl">
           {content}

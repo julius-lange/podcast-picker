@@ -3,14 +3,14 @@ export const PODCAST_MAP: Record<
   { title: string; description: string; url: string }
 > = {
   // week1 (8.1.2026)
-  'week1:a-a-a': { title: 'Beate Heinisch', description: 'Spitze erreicht', url: '#' },
-  'week1:a-a-b': { title: 'Christine Hauck', description: 'Noch auf dem Weg nach oben', url: '#' },
-  'week1:a-b-a': { title: 'Christina Foerster', description: 'Ein radikaler Branchenwechsel', url: '#' },
-  'week1:a-b-b': { title: 'Alice Sachova', description: 'Ein völliger Rollenwechsel', url: '#' },
-  'week1:b-a-a': { title: 'Iris Braun', description: 'Social Business', url: '#' },
-  'week1:b-a-b': { title: 'Mareike Jens', description: 'Sustainability', url: '#' },
-  'week1:b-b-a': { title: 'Katja Bossert', description: 'Success Story', url: '#' },
-  'week1:b-b-b': { title: 'Bea Beste', description: 'Überwundene Herausforderungen', url: '#' },
+  'week1:a-a-a': { title: 'Beate Heinisch', description: 'Spitze erreicht', url: 'https://app.frame.io/presentations/206096eb-9985-475f-80a3-72f83d8332ee' },
+  'week1:a-a-b': { title: 'Christine Hauck', description: 'Noch auf dem Weg nach oben', url: 'https://app.frame.io/presentations/3a19ac3a-33a5-4169-95e0-9464c4d49670' },
+  'week1:a-b-a': { title: 'Christina Foerster', description: 'Ein radikaler Branchenwechsel', url: 'https://app.frame.io/presentations/c839cfbf-9928-498e-b11b-aa6e80950eba' },
+  'week1:a-b-b': { title: 'Alice Sachova', description: 'Ein völliger Rollenwechsel', url: 'https://app.frame.io/presentations/73fba077-f142-42a4-868f-ff07a1a7e8a6' },
+  'week1:b-a-a': { title: 'Iris Braun', description: 'Social Business', url: 'https://app.frame.io/presentations/9071dc2c-ac09-4027-8401-a6466c1a556a' },
+  'week1:b-a-b': { title: 'Mareike Jens', description: 'Sustainability', url: 'https://app.frame.io/presentations/734307e6-8559-43d9-b209-0cc3849384f1' },
+  'week1:b-b-a': { title: 'Katja Bossert', description: 'Success Story', url: 'https://app.frame.io/presentations/5207efc7-f6bb-4dd0-a743-940a1e2d1ac3' },
+  'week1:b-b-b': { title: 'Bea Beste', description: 'Überwundene Herausforderungen', url: 'https://app.frame.io/presentations/2559bd4e-1de8-4d75-a859-97b4976337d8' },
 
   // week2 (15.1.2026)
   'week2:a-a-a': { title: 'Verena Grundke', description: 'Vollzeit', url: '#' },

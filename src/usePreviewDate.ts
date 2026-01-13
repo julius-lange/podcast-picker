@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { QuizVersion } from '@/types';
 
-const WEEK_2_START = new Date('2026-01-16');
-const WEEK_3_START = new Date('2026-01-23');
-const WEEK_4_START = new Date('2026-01-29');
+const WEEK_2_START = new Date('2026-01-13');
+const WEEK_3_START = new Date('2026-01-20');
+const WEEK_4_START = new Date('2026-01-27');
 
 export function usePreviewDate() {
   const [date, setDate] = useState<Date>(new Date());
